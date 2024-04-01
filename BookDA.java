@@ -6,9 +6,11 @@ import java.util.Scanner;
 
 public class BookDA {
     private HashMap<String, Author> authorMap;
+    private HashMap<String, Book> bookMap;
 
     public BookDA() throws FileNotFoundException {
         Scanner input = new Scanner(new FileReader("Book.csv"));
+        bookMap = new HashMap<>();
 
         while (input.hasNext()) {
             authorMap = new HashMap<>();
@@ -24,19 +26,20 @@ public class BookDA {
 
             AuthorDA authorDA = new AuthorDA(book.getAuthorName());
             book.setAuthorMap(authorDA.getAuthorMap());
+            bookMap.put(book.getIsbn(), book);
             
-            print(book);
         }
+        
+        for (Map.Entry<String, Book> entryMap : bookMap.entrySet()) {
+            System.out.println(entryMap.getKey() + " " + entryMap.getValue().getTitle());
+            for (Map.Entry<String, Author> entryMap2 : entryMap.getValue().getAuthorMap().entrySet()) {
+                System.out.println("\t" + entryMap2.getValue().getName() + " - " + entryMap2.getValue().getBio());
+            }
+            System.out.println();
+        }
+        
         input.close();
 
-    }
-
-    private void print(Book book) {
-        System.out.println(book.getIsbn() + " " + book.getTitle());
-        for (Map.Entry<String, Author> entryMap : book.getAuthorMap().entrySet()) {
-            System.out.println("\t" + entryMap.getValue().getName() + " - " + entryMap.getValue().getBio());
-        }
-        System.out.println();
     }
 
 }
